@@ -112,7 +112,10 @@ var burger = document.getElementById('burger');
 
 burger.addEventListener('click', function () {
     this.classList.toggle('open');
-    window.navigator.vibrate(30);
+
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate(30);
+    }
 
     if (this.classList.contains('open')) {
         aside.classList.add('active');
