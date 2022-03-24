@@ -152,8 +152,12 @@ var avatar = document.getElementById('avatar');
 avatar.addEventListener('click', function () {
     if (!this.classList.contains("active")) {
         this.classList.add('active');
+        burger.style.opacity = '0';
+        burger.style.zIndex = '-1';
     } else {
         this.classList.remove('active');
+        burger.style.opacity = '1';
+        burger.style.zIndex = '9999';
     }
 });
 
