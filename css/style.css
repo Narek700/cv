@@ -204,9 +204,6 @@ header {
         object-fit: cover; }
   .content .head {
     position: relative; }
-    .content .head:hover .exp-icon {
-      -webkit-transform: rotateY(360deg);
-      transform: rotateY(360deg); }
     .content .head h3 {
       background-color: #313A3A;
       color: #ffffff;
@@ -305,9 +302,6 @@ aside {
     -webkit-transition: .8s;
     -o-transition: .8s;
     transition: .8s; }
-  aside .mail:hover img {
-    -webkit-transform: rotateY(360deg);
-    transform: rotateY(360deg); }
   aside .overlay {
     width: 275px;
     height: 275px;

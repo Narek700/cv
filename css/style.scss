@@ -293,13 +293,6 @@ header {
   .head {
     position: relative;
 
-    &:hover {
-      .exp-icon {
-        -webkit-transform: rotateY(360deg);
-        transform: rotateY(360deg);
-      }
-    }
-
     h3 {
       background-color: #313A3A;
       color: #ffffff;
@@ -443,15 +436,7 @@ aside {
       -o-transition: .8s;
       transition: .8s;
     }
-
-    &:hover {
-      img {
-        -webkit-transform: rotateY(360deg);
-        transform: rotateY(360deg);
-      }
-    }
   }
-
 
   .overlay {
     width: 275px;
