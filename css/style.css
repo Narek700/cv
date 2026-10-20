@@ -368,18 +368,32 @@ aside .skills { margin-bottom: 30px; }
 }
 
 @media only screen and (max-width: 768px) {
-  header .cv { display: none; }
+  header .cv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: auto;
+    right: 13px;
+    top: 13px;
+    width: 42px;
+    height: 42px;
+    background-color: rgba(255, 255, 255, .12);
+    border-radius: 50%;
+  }
+  header .cv img { width: 20px; }
   header .head {
     position: static;
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 62px 10px 0;
   }
   header .head .container {
     height: 100%;
     display: flex;
     padding: 0 15px;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 14px;
     background-color: transparent;
   }
   header .identity { text-align: left; }
@@ -400,8 +414,8 @@ aside .skills { margin-bottom: 30px; }
 }
 
 @media only screen and (max-width: 575px) {
-  header h1 { font-size: 25px; margin-bottom: 0; }
-  header h2 { font-size: 20px; }
+  header h1 { font-size: 20px; letter-spacing: 1px; margin-bottom: 0; }
+  header h2 { font-size: 15px; }
   .content .uni-comp { font-size: 16px; }
   .content .head .exp-icon { width: 50px; height: 50px; }
   .content .head .exp-icon img { width: 35px; }
