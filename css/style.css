@@ -375,12 +375,14 @@ aside .skills { margin-bottom: 30px; }
     position: absolute;
     left: auto;
     right: 13px;
-    top: 13px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 42px;
     height: 42px;
     background-color: rgba(255, 255, 255, .12);
     border-radius: 50%;
   }
+  header .cv:hover { transform: translateY(-50%); }
   header .cv img { width: 20px; }
   header .head {
     position: static;
@@ -397,6 +399,8 @@ aside .skills { margin-bottom: 30px; }
     background-color: transparent;
   }
   header .identity { text-align: left; }
+  header h1 { font-size: 28px; letter-spacing: 1px; margin-bottom: 0; }
+  header h2 { font-size: 16px; }
   header canvas { display: none; }
   #burger { display: inline-block; }
 
