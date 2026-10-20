@@ -3,6 +3,10 @@
 // Content (name, contacts, education, experience, skills, languages) is
 // scraped straight from the DOM, so editing index.html is enough to keep
 // cv.pdf in sync — this script owns only the PDF's visual design.
+//
+// Run manually after editing index.html: `npm install && npm run build:pdf`,
+// then commit the regenerated cv.pdf. Not run by Netlify — its build image
+// ships Node 16, too old for puppeteer's ESM-only package.
 const path = require('path');
 const puppeteer = require('puppeteer');
 
