@@ -1,192 +1,135 @@
-var resizeReset = function () {
-    w = canvasBody.width = 700;
-    h = canvasBody.height = 250;
-};
+(function () {
+  'use strict';
 
-var opts = {
-    particleColor: "rgba(255,255,255,0.35)",
-    lineColor: "rgb(200,200,200, .1)",
-    particleAmount: 50,
-    defaultSpeed: .15,
-    variantSpeed: .15,
-    defaultRadius: 2,
-    variantRadius: 2,
-    linkRadius: 80,
-};
+  /* ---------------- Background particle network ---------------- */
+  var canvas = document.getElementById('canvas');
+  if (canvas) {
+    var ctx = canvas.getContext('2d');
+    var width = 700;
+    var height = 250;
+    var opts = {
+      particleColor: 'rgba(255,255,255,0.35)',
+      lineColor: [200, 200, 200],
+      particleAmount: 50,
+      defaultSpeed: 0.15,
+      variantSpeed: 0.15,
+      defaultRadius: 2,
+      variantRadius: 2,
+      linkRadius: 80,
+    };
 
-let deBouncer = function () {
-    clearTimeout(tid);
-    tid = setTimeout(function () {
-        resizeReset();
-    }, delay);
-};
+    function resize() {
+      width = canvas.width = 700;
+      height = canvas.height = 250;
+    }
 
-let checkDistance = function (x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-};
+    function Particle() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      var speed = opts.defaultSpeed + Math.random() * opts.variantSpeed;
+      var angle = Math.floor(Math.random() * 360);
+      this.radius = opts.defaultRadius + Math.random() * opts.variantRadius;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+    }
+    Particle.prototype.update = function () {
+      if (this.x >= width || this.x <= 0) this.vx *= -1;
+      if (this.y >= height || this.y <= 0) this.vy *= -1;
+      this.x = Math.min(Math.max(this.x + this.vx, 0), width);
+      this.y = Math.min(Math.max(this.y + this.vy, 0), height);
+    };
+    Particle.prototype.draw = function () {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = opts.particleColor;
+      ctx.fill();
+    };
 
-let linkPoints = function (point1, hubs) {
-    for (let i = 0; i < hubs.length; i++) {
-        let distance = checkDistance(point1.x, point1.y, hubs[i].x, hubs[i].y);
-        let opacity = 1 - distance / opts.linkRadius;
+    function linkPoints(point, hubs) {
+      for (var i = 0; i < hubs.length; i++) {
+        var dist = Math.hypot(point.x - hubs[i].x, point.y - hubs[i].y);
+        var opacity = 1 - dist / opts.linkRadius;
         if (opacity > 0) {
-            drawArea.lineWidth = 0.5;
-            drawArea.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacity})`;
-            drawArea.beginPath();
-            drawArea.moveTo(point1.x, point1.y);
-            drawArea.lineTo(hubs[i].x, hubs[i].y);
-            drawArea.closePath();
-            drawArea.stroke();
+          ctx.lineWidth = 0.5;
+          ctx.strokeStyle = 'rgba(' + opts.lineColor.join(',') + ',' + opacity + ')';
+          ctx.beginPath();
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(hubs[i].x, hubs[i].y);
+          ctx.stroke();
         }
-    }
-};
-
-Particle = function (xPos, yPos) {
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
-    this.speed = opts.defaultSpeed + Math.random() * opts.variantSpeed;
-    this.directionAngle = Math.floor(Math.random() * 360);
-    this.color = opts.particleColor;
-    this.radius = opts.defaultRadius + Math.random() * opts.variantRadius;
-    this.vector = {
-        x: Math.cos(this.directionAngle) * this.speed,
-        y: Math.sin(this.directionAngle) * this.speed
-    };
-    this.update = function () {
-        this.border();
-        this.x += this.vector.x;
-        this.y += this.vector.y;
-    };
-    this.border = function () {
-        if (this.x >= w || this.x <= 0) {
-            this.vector.x *= -1;
-        }
-        if (this.y >= h || this.y <= 0) {
-            this.vector.y *= -1;
-        }
-        if (this.x > w) this.x = w;
-        if (this.y > h) this.y = h;
-        if (this.x < 0) this.x = 0;
-        if (this.y < 0) this.y = 0;
-    };
-    this.draw = function () {
-        drawArea.beginPath();
-        drawArea.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        drawArea.closePath();
-        drawArea.fillStyle = this.color;
-        drawArea.fill();
-    };
-};
-
-function setup() {
-    particles = [];
-    resizeReset();
-    for (let i = 0; i < opts.particleAmount; i++) {
-        particles.push(new Particle());
-    }
-    window.requestAnimationFrame(loop);
-}
-
-function loop() {
-    window.requestAnimationFrame(loop);
-    drawArea.clearRect(0, 0, w, h);
-    for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-    }
-    for (let i = 0; i < particles.length; i++) {
-        linkPoints(particles[i], particles);
-    }
-}
-
-const canvasBody = document.getElementById("canvas"),
-    drawArea = canvasBody.getContext("2d");
-let delay = 40, tid,
-    rgb = opts.lineColor.match(/\d+/g);
-
-resizeReset();
-setup();
-
-var aside = document.getElementById('aside');
-var burger = document.getElementById('burger');
-
-burger.addEventListener('click', function () {
-    this.classList.toggle('open');
-
-    if (window.navigator.vibrate) {
-        window.navigator.vibrate(30);
+      }
     }
 
-    if (this.classList.contains('open')) {
-        aside.classList.add('active');
+    var particles = [];
+    function setup() {
+      resize();
+      particles = [];
+      for (var i = 0; i < opts.particleAmount; i++) particles.push(new Particle());
+      requestAnimationFrame(loop);
+    }
+    function loop() {
+      requestAnimationFrame(loop);
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(function (p) { p.update(); p.draw(); });
+      particles.forEach(function (p) { linkPoints(p, particles); });
+    }
+    setup();
+  }
+
+  /* ---------------- Burger menu ---------------- */
+  var aside = document.getElementById('aside');
+  var burger = document.getElementById('burger');
+  if (burger && aside) {
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      if (window.navigator.vibrate) window.navigator.vibrate(30);
+      aside.classList.toggle('active', burger.classList.contains('open'));
+    });
+  }
+
+  /* ---------------- Reveal + skill bars on load ---------------- */
+  window.addEventListener('load', function () {
+    document.querySelectorAll('.trs').forEach(function (el) { el.classList.add('active'); });
+
+    var lines = document.querySelectorAll('.skill .line');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var line = entry.target;
+          var fill = line.querySelector('span');
+          fill.style.width = (line.getAttribute('data-p') || 0) + '%';
+          observer.unobserve(line);
+        });
+      }, { threshold: 0.4 });
+      lines.forEach(function (line) { io.observe(line); });
     } else {
-        aside.classList.remove('active');
+      lines.forEach(function (line) {
+        line.querySelector('span').style.width = (line.getAttribute('data-p') || 0) + '%';
+      });
     }
-});
+  });
 
-var trs = document.getElementsByClassName('trs');
-window.onload = function () {
-    let lines = document.getElementsByClassName('line');
-    if (window.innerWidth > 768) {
-        for (let i = 0; i < lines.length; i++) {
-            let lineWidth = lines[i].getAttribute('data-prc') + 'px';
-            let verticalLine = lines[i].querySelector('span');
-            verticalLine.style.transform = `translateX(${lineWidth})`
-        }
-    } else {
-        for (let i = 0; i < lines.length; i++) {
-            let lineWidth = lines[i].getAttribute('data-p') + '%';
-            let verticalLine = lines[i].querySelector('span');
-            verticalLine.style.left = `${lineWidth}`
-        }
-    }
+  /* ---------------- Avatar lightbox ---------------- */
+  var avatar = document.getElementById('avatar');
+  if (avatar && burger) {
+    avatar.addEventListener('click', function () {
+      var isActive = avatar.classList.toggle('active');
+      burger.style.opacity = isActive ? '0' : '1';
+      burger.style.zIndex = isActive ? '-1' : '9999';
+    });
+  }
+  var closeBtn = document.getElementById('close');
+  if (closeBtn && avatar) {
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      avatar.classList.remove('active');
+      if (burger) { burger.style.opacity = '1'; burger.style.zIndex = '9999'; }
+    });
+  }
 
-    for (var k = 0; k < trs.length; k++) {
-        trs[k].classList.add('active')
-    }
-
-};
-
-
-var avatar = document.getElementById('avatar');
-avatar.addEventListener('click', function () {
-    if (!this.classList.contains("active")) {
-        this.classList.add('active');
-        burger.style.opacity = '0';
-        burger.style.zIndex = '-1';
-    } else {
-        this.classList.remove('active');
-        burger.style.opacity = '1';
-        burger.style.zIndex = '9999';
-    }
-});
-
-
-document.onkeypress = function (event) {
-    event = (event || window.event);
-    if (event.keyCode == 123) {
-        return false;
-    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
-        return false;
-    }
-};
-document.onmousedown = function (event) {
-    event = (event || window.event);
-    if (event.keyCode == 123) {
-        return false;
-    }
-};
-document.onkeydown = function (event) {
-    event = (event || window.event);
-    if (event.keyCode == 123) {
-        return false;
-    } else if (event.ctrlKey && event.shiftKey && event.keyCode == 73) {
-        return false;
-    }
-};
-
-window.oncontextmenu = function () {
-    return false;
-};
-
-console.log('%cWelcome!', 'color: red; background-color: white; font-size: 25px; text-transform: uppercase; padding: 50px 10px; font-family: Arial; sans-serif')
+  console.log(
+    '%cWelcome!',
+    'color: red; background-color: white; font-size: 25px; text-transform: uppercase; padding: 50px 10px; font-family: Arial, sans-serif;'
+  );
+})();
