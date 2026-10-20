@@ -540,4 +540,69 @@ aside {
   h3 {
     font-size: 20px; } }
 
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  #burger, .cv, #close, .canvasLine, #canvas {
+    display: none !important;
+  }
+
+  html, body, .main,
+  .scroll-wrapper, .scroll-wrapper > .scroll-content,
+  aside, aside .cont {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  .main {
+    padding-right: 0 !important;
+  }
+
+  .content {
+    padding-left: 0 !important;
+  }
+
+  header {
+    text-align: left;
+  }
+
+  header .head {
+    position: static !important;
+    height: auto !important;
+    text-align: left !important;
+    padding: 20px 0 !important;
+  }
+
+  header .head .container {
+    height: auto !important;
+    display: block !important;
+    background-color: transparent !important;
+  }
+
+  aside {
+    width: 100% !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .skill, .specialty, .uni-comp, .date {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+  article.trs {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
