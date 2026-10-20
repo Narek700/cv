@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nm-cv.netlify.app/sitemap.xml
